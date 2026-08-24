@@ -1,0 +1,132 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+data = {
+    "Shipment_ID": range(1, 21),
+    "Delivery_Time_Days": [2, 3, 4, 2, 5, 3, 6, 4, 2, 7, 3, 5, 4, 6, 2, 3, 5, 4, 7, 3],
+    "Shipment_Volume": [120, 150, 200, 100, 250, 180, 300, 220, 130, 350, 160, 240, 190, 280, 110, 170, 260, 210, 320, 140],
+    "Distance_KM": [50, 80, 120, 40, 180, 100, 250, 150, 60, 300, 90, 170, 130, 220, 45, 70, 190, 140, 280, 75],
+    "Transportation_Cost": [1500, 2200, 3500, 1200, 5000, 3000, 7000, 4500, 1800, 8500, 2500, 4800, 3800, 6500, 1400, 2100, 5200, 4000, 8000, 2300],
+    "Delivery_Status": [
+        "On-Time", "On-Time", "Delayed", "On-Time", "Delayed",
+        "On-Time", "Delayed", "On-Time", "On-Time", "Delayed",
+        "On-Time", "Delayed", "On-Time", "Delayed", "On-Time",
+        "On-Time", "Delayed", "On-Time", "Delayed", "On-Time"
+    ],
+    "Warehouse": [
+        "Pune", "Mumbai", "Pune", "Nashik", "Mumbai",
+        
+        "Pune", "Delhi", "Mumbai", "Pune", "Delhi",
+        "Nashik", "Mumbai", "Pune", "Delhi", "Nashik",
+        "Pune", "Mumbai", "Delhi", "Pune", "Nashik"
+    ]
+}
+
+df = pd.DataFrame(data)
+
+df.head()
+df.info()
+df.describe()
+plt.figure(figsize=(8, 5))
+
+plt.hist(df["Delivery_Time_Days"], bins=7)
+
+plt.title("Distribution of Delivery Time")
+plt.xlabel("Delivery Time (Days)")
+plt.ylabel("Number of Shipments")
+
+plt.show()
+plt.figure(figsize=(8, 5))
+
+plt.hist(df["Delivery_Time_Days"], bins=7)
+
+plt.title("Distribution of Delivery Time")
+plt.xlabel("Delivery Time (Days)")
+plt.ylabel("Number of Shipments")
+
+plt.show()
+plt.figure(figsize=(8, 5))
+
+plt.scatter(df["Distance_KM"], df["Transportation_Cost"])
+
+plt.title("Distance vs Transportation Cost")
+plt.xlabel("Distance (KM)")
+plt.ylabel("Transportation Cost")
+
+plt.show()
+status_count = df["Delivery_Status"].value_counts()
+
+plt.figure(figsize=(6, 5))
+
+plt.bar(status_count.index, status_count.values)
+
+plt.title("Delivery Status Analysis")
+plt.xlabel("Delivery Status")
+plt.ylabel("Number of Shipments")
+
+plt.show()
+correlation = df[
+    ["Delivery_Time_Days", "Shipment_Volume", "Distance_KM", "Transportation_Cost"]
+].corr()
+
+print(correlation)
+print("Average Delivery Time:", df["Delivery_Time_Days"].mean())
+print("Average Shipment Volume:", df["Shipment_Volume"].mean())
+print("Average Distance:", df["Distance_KM"].mean())
+print("Average Transportation Cost:", df["Transportation_Cost"].mean())
+
+print("\nDelivery Status:")
+print(df["Delivery_Status"].value_counts())
+
+print("\nWarehouse-wise Shipments:")
+print(df["Warehouse"].value_counts())
+delay_analysis = df.groupby("Delivery_Status").agg({
+    "Delivery_Time_Days": "mean",
+    "Transportation_Cost": "mean",
+    "Shipment_Volume": "mean"
+})
+
+print(delay_analysis)
+status_count = df["Delivery_Status"].value_counts()
+
+plt.figure(figsize=(7, 7))
+
+plt.pie(
+    status_count.values,
+    labels=status_count.index,
+    autopct="%1.1f%%",
+    startangle=90
+)
+
+plt.title("On-Time vs Delayed Shipments")
+
+plt.show()
+print("KEY LOGISTICS INSIGHTS")
+print("-----------------------")
+
+print("1. Average Delivery Time:",
+      round(df["Delivery_Time_Days"].mean(), 2), "days")
+
+print("2. Average Shipment Volume:",
+      round(df["Shipment_Volume"].mean(), 2))
+
+print("3. Average Distance:",
+      round(df["Distance_KM"].mean(), 2), "KM")
+
+print("4. Average Transportation Cost: ₹",
+      round(df["Transportation_Cost"].mean(), 2))
+
+print("5. Most Common Warehouse:",
+      df["Warehouse"].mode()[0])
+
+print("6. Most Common Delivery Status:",
+      df["Delivery_Status"].mode()[0])
+print("RECOMMENDATIONS")
+print("----------------")
+
+print("1. Monitor delayed shipments and identify their major causes.")
+print("2. Optimize routes for long-distance shipments to reduce delivery time.")
+print("3. Monitor transportation costs for high-distance deliveries.")
+print("4. Allocate resources based on shipment volume at each warehouse.")
+print("5. Use regular data analysis to improve delivery performance.")
